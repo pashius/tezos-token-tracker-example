@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<head>
+
+    <title>Tezos Token Tracker</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="./meta.js"></script>
+    <script src="./priceCurrent.js"></script>
+    <script src="./priceDayAgo.js"></script>
+    <script src="./priceWeekAgo.js"></script>
+
+</head>
+
+<body>
+
+    <script>
+
+        $(document).ready(function(){
+
+            $.ajax({
+            
+                "url" : "https://api.tzkt.io/v1/quotes/last",
+                "type" : "GET",
+                "success" : function(data) {
+            
+                    var tezPriceExchange = Math.round((data.usd) * 1000)/1000;
+                    
+                    document.getElementById("tezPriceExchange").innerHTML = tezPriceExchange;
+
+                    var contract = "KT1WxgZ1ZSfMgmsSDDcUn8Xn577HwnQ7e1Lb";
+
+                    meta(contract);
+
+            $.ajax({
+
+                "url" : "https://api.tzkt.io/v1/statistics/current?select=level",
+                "type" : "GET",
+                "success" : function(data) {
+
+                    var level = data;
+
+                    tokenPriceFunc(contract, level, tezPriceExchange);
+
+                    }})
+
+                }});              
+            });
+            
+        
+    </script>
+
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(odd) {
+      background-color: #d7f6fe;
+    }
+    </style>
+
+    <div>
+        <table>
+            <thead>
+                    <b><p style="text-align:center;">Tezos Token Tracker</p></b>
+            </thead>
+            <tbody>
+                <td style="text-align:center;width: 25%">Token</td>
+                <td style="text-align:center;width: 25%">Price (USD)</td>
+                <td style="text-align:center;width: 25%">24h Change</td>
+                <td style="text-align:center;width: 25%">7d Change</td>
+                <tr>
+                    <td>Tezos ($XTZ)</td>
+                    <td>$<span id="tezPriceExchange"></span></td>
+                    <td><span id="tezPrice24hChange"></span></td>
+                    <td><span id="tezPrice7dChange"></span></td>
+                </tr> 
+                <tr>
+                    <td>$<span id="tokenAlias"></span></td>
+                    <td>$<span id="tokenPrice"></span></td>
+                    <td><span id="tokenPriceChange24"></span></td>
+                    <td><span id="tokenPriceChange7d"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
